@@ -15,12 +15,12 @@ public struct UserInfoRepresentableMacro: ExtensionMacro, MemberMacro {
         let keyAndValues = targetProperties.isEmpty ? [":"] : targetProperties.map { property in property.keyAndValue() }
         return [
             """
-            init(userInfo: [AnyHashable: Any]) throws {
+            public init(userInfo: [AnyHashable: Any]) throws {
                 \(raw: assigns.joined(separator: "\n"))
             }
             """,
             """
-            func convertToUserInfo() -> [AnyHashable : Any] {
+            public func convertToUserInfo() -> [AnyHashable : Any] {
                 [
                     \(raw: keyAndValues.joined(separator: "\n"))
                 ]

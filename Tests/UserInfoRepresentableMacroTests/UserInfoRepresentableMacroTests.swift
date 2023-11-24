@@ -41,13 +41,13 @@ final class UserInfoRepresentableMacroTests: XCTestCase {
                 static var staticValue = "static"
                 var computedValue: Int { 1 }
 
-                init(userInfo: [AnyHashable: Any]) throws {
+                public init(userInfo: [AnyHashable: Any]) throws {
                     self.oldName = try _extract("oldName", from: userInfo)
                     self.newName = try _extract("newName", from: userInfo)
                     self.value = try _extract("custom", from: userInfo)
                 }
 
-                func convertToUserInfo() -> [AnyHashable : Any] {
+                public func convertToUserInfo() -> [AnyHashable : Any] {
                     [
                         "oldName": _userInfoValue(oldName),
                         "newName": _userInfoValue(newName),
