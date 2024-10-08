@@ -17,7 +17,13 @@ extension VariableDeclSyntax {
     }
 
     private func accessorsMatching(_ predicate: (TokenKind) -> Bool) -> [AccessorDeclSyntax] {
-        let patternBindings = bindings.compactMap { binding in binding.as(PatternBindingSyntax.self) }
+        let patternBindings = bindings.compactMap { binding in
+#if compiler(>=6.0)
+            binding as PatternBindingSyntax
+#else
+            binding.as(PatternBindingSyntax.self)
+#endif
+        }
         let accessors: [AccessorDeclListSyntax.Element] = patternBindings.compactMap { patternBinding in
             switch patternBinding.accessorBlock?.accessors {
             case .accessors(let accessors):
@@ -27,9 +33,13 @@ extension VariableDeclSyntax {
             }
         }.flatMap { $0 }
         return accessors.compactMap { accessor in
+#if compiler(>=6.0)
+            let decl = accessor as AccessorDeclSyntax
+#else
             guard let decl = accessor.as(AccessorDeclSyntax.self) else {
                 return nil
             }
+#endif
             if predicate(decl.accessorSpecifier.tokenKind) {
                 return decl
             } else {
