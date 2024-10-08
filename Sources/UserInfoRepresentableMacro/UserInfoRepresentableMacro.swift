@@ -46,9 +46,15 @@ public struct UserInfoRepresentableMacro: ExtensionMacro, MemberMacro {
     }
 
     private static func extractStoredProperty(node: MemberBlockItemSyntax) throws -> TargetProperty? {
+#if compiler(>=6.0)
+        guard let variableDeclSyntax = node.decl.as(VariableDeclSyntax.self),
+              let binding = variableDeclSyntax.bindings.first
+        else { return nil }
+#else
         guard let variableDeclSyntax = node.decl.as(VariableDeclSyntax.self),
               let binding = variableDeclSyntax.bindings.first?.as(PatternBindingSyntax.self)
         else { return nil }
+#endif
 
         let isStatic = variableDeclSyntax.modifiers.contains { declModifierSyntax in
             declModifierSyntax.name.tokenKind == .keyword(.static)
