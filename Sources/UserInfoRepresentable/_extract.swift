@@ -17,12 +17,12 @@ public func _extract<T: UserInfoRepresentable>(_ key: AnyHashable, from userInfo
     throw MissingKeyError(missingKey: key)
 }
 
-public struct MissingKeyError: Error {
-    let missingKey: AnyHashable
-}
+public struct MissingKeyError: Error, CustomStringConvertible {
+    public var missingKey: String
+    public var description: String
 
-extension MissingKeyError: CustomStringConvertible {
-    public var description: String {
-        "\(missingKey) is not contained in the given userInfo"
+    init(missingKey: AnyHashable) {
+        self.missingKey = missingKey.description
+        self.description = "\(missingKey) is not contained in the given userInfo"
     }
 }

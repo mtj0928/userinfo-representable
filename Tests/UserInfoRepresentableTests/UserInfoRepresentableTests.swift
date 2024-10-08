@@ -28,6 +28,19 @@ final class UserInfoRepresentableTests: XCTestCase {
         XCTAssertEqual(barUserInfo.count, 1)
         XCTAssertEqual(barUserInfo["value"] as? String, "bar")
     }
+
+    func testFailCase() throws {
+        let userInfo: [AnyHashable: Any] = [
+            "text": (nil as String?) as Any,
+            "bar": [
+                "value": "bar"
+            ],
+        ]
+        XCTAssertThrowsError(try Foo(userInfo: userInfo)) { error in
+            let missingKeyError = error as? MissingKeyError
+            XCTAssertEqual(missingKeyError?.missingKey, "100")
+        }
+    }
 }
 
 @UserInfoRepresentable
